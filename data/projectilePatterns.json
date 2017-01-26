@@ -1,0 +1,78 @@
+{
+	"patternData": [{
+		"name": "triangleSpread",
+		"projectile": "bulletRoundRed",
+		"delay": 1000,
+		"interval": 0,
+		"count": 5,
+		"patterns":[{
+			"projectile": "bulletRoundBlue",
+			"burst": 1,
+			"offset": 0,
+			"speed": 200,
+			"targetPlayer": true
+		},{
+			"burst": 2,
+			"offset": 5,
+			"speed":190,
+			"targetPlayer": true
+		},{
+			"projectile": "bulletRoundBlue",
+			"burst": 3,
+			"offset": 5,
+			"speed":180,
+			"targetPlayer": true
+		},{
+			"burst": 4,
+			"offset": 5,
+			"speed":170,
+			"targetPlayer": true
+		},{
+			"projectile": "bulletRoundBlue",
+			"burst": 5,
+			"offset": 5,
+			"speed":160,
+			"targetPlayer": true
+		}]
+	},{
+		"name": "circle10SpreadRed",
+		"projectile": "bulletRoundRed",
+		"delay": 0,
+		"interval": 0,
+		"count": 1,
+		"patterns":[{
+			"burst": 10,
+			"offset": 36,
+			"speed": 200
+		}]
+	},{
+		"name": "circle8SpreadYellow",
+		"projectile": "bulletRoundYellow",
+		"delay": 1000,
+		"interval": 0,
+		"count": 1,
+		"patterns":[{
+			"burst": 8,
+			"offset": 45,
+			"speed": 100,
+			"duration": 1500,
+			"onDeath": "circle10SpreadRed"
+		}]
+	},{
+		"name": "delayedChaseBulletRed",
+		"projectile": "bulletRoundRed",
+		"delay": 1000,
+		"interval": 0,
+		"count": 10,
+		"patterns":[{
+			"burst": 1,
+			"offset": 0,
+			"speed": 200,
+			"path": {
+				"waypoints": [[50,50],["player", [-50,-50], [50,50]]],
+				"type":0,
+				"time": [500, 500]
+			}
+		}]
+	}]
+}

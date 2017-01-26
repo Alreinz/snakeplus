@@ -1,0 +1,19 @@
+{
+	"projectileData": [{
+		"name": "bulletRoundRed",
+		"sprite": "bullet_round_red"
+	},{
+		"name": "bulletRoundBlue",
+		"sprite": "bullet_round_blue"
+	},{
+		"name": "bulletRoundPurple",
+		"sprite": "bullet_round_purple"
+	},{
+		"name": "bulletRoundYellow",
+		"sprite": "bullet_round_yellow"
+	},{
+		"name": "laserRed",
+		"sprite": "laser_red",
+		"type":"lazer"
+	}]
+}
