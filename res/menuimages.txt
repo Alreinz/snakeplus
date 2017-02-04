@@ -1,7 +1,0 @@
-mainmenu
-play
-playselected
-options
-optionselected
-exit
-exitselected
