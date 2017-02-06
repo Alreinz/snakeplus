@@ -5,7 +5,7 @@
 	$servername = "localhost";
 	$username = "root";
 	$password = "";
-	$dbname = "games";
+	$dbname = "aldizonc_games";
 
 	// Create connection
 	$conn = new mysqli($servername, $username, $password, $dbname);
@@ -14,8 +14,8 @@
 		die("Connection failed: " . $conn->connect_error);
 	} 
 
-	$sql = "INSERT INTO snake_scores (username, score)
-	VALUES ('".  $entryUsername . "'," . $entryScore . ")";
+	$sql = "INSERT INTO snake_scores (username, score, timestamp)
+	VALUES ('".  $entryUsername . "'," . $entryScore . ", NOW())";
 
 	if ($conn->query($sql) === TRUE) {
 		echo "success";

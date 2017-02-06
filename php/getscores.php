@@ -2,7 +2,7 @@
 	$servername = "localhost";
 	$username = "root";
 	$password = "";
-	$dbname = "games";
+	$dbname = "aldizonc_games";
 
 	// Create connection
 	$conn = new mysqli($servername, $username, $password, $dbname);

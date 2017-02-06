@@ -52,7 +52,7 @@ var DIRECTION_LEFT = 2;
 var DIRECTION_RIGHT = 3;
 
 // game delay
-var speed = 0;
+var speed = 1;
 var updateDelay;
 var grid;
 
@@ -68,6 +68,7 @@ var blinked=false;
 var textCursor;
 var textUsername;
 var textNewScore;
+var textEnterToSave;
 
 // Keys
 var buttonSpeedUp;
@@ -80,13 +81,19 @@ var buttonSpace;
 var usernameBuffer = "";
 var style = { font: "15px Courier", fill: "#FFF" };
 
+var sfxKeyPress;
+var sfxFood;
+
 var stateMenu = {
 	
 	preload: function() {
 		game.load.image('title', 'res/title.png');
+		game.load.audio('keysfx', 'res/key_press.wav');
 	},
 	
 	create: function() {
+		sfxKeyPress = game.add.audio('keysfx');
+		
 		imageTitle = game.add.sprite( 0, 0, 'title');
 		imageTitle.x = (SCREEN_WIDTH / 2) - (imageTitle.width / 2);
 		imageTitle.y = (SCREEN_HEIGHT / 2) - (imageTitle.height / 2) - 50;
@@ -102,6 +109,7 @@ var stateMenu = {
 	},
 	
 	playGame: function() {
+		sfxKeyPress.play();
 		game.state.start(STATE_PLAY);
 	},
 	
@@ -120,11 +128,12 @@ var stateScoreboard = {
 
 	preload: function() {
 		game.load.image('title', 'res/title.png');
-		
-		
+		game.load.audio('keysfx', 'res/key_press.wav');
 	},
 	
 	create: function() {
+		sfxKeyPress = game.add.audio('keysfx');
+		
 		game.input.keyboard.removeKey(Phaser.KeyCode.BACKSPACE);
 		game.input.keyboard.removeKey(Phaser.KeyCode.SPACEBAR);
 		
@@ -133,7 +142,7 @@ var stateScoreboard = {
 		imageTitle.y = 100;
 		
 		var text = "Scoreboard";
-		game.add.text((SCREEN_WIDTH / 2) - (9 * text.length) / 2, 200, text, style);
+		game.add.text((SCREEN_WIDTH / 2) - (9 * text.length) / 2, 175, text, style);
 		
 		var text = "Press space key to return to menu";
 		textStartGame = game.add.text((SCREEN_WIDTH / 2) - (4.5 * text.length), SCREEN_HEIGHT / 2, text, style);
@@ -149,19 +158,19 @@ var stateScoreboard = {
 			url: 'php/getscores.php',
 			dataType: 'json',
 			success: function(data) {
-				console.log(data);
-				
 				for( var i = 0; i < data.length; i++ ) {
-					game.add.text(320, 220 + (i * 15), (i + 1) + ".", style);
-					game.add.text(350, 220 + (i * 15), data[i].username, style);
-					game.add.text(600, 220 + (i * 15), data[i].score, style);
-					game.add.text(350, 220 + (i * 15), "____________________________________", style);
+					game.add.text(320, 200 + (i * 15), (i + 1) + ".", style);
+					game.add.text(350, 200 + (i * 15), data[i].username, style);
+					game.add.text(500, 200 + (i * 15), data[i].score, style);
+					game.add.text(600, 200 + (i * 15), data[i].timestamp, style);
+					game.add.text(350, 200 + (i * 15), "_______________________________________________", style);
 				}
 			}
 		});
 	},
 	
 	playGame: function() {
+		sfxKeyPress.play();
 		game.state.start(STATE_MENU);
 	},
 
@@ -180,13 +189,16 @@ var stateScore = {
 	
 	preload: function() {
 		game.load.image('title', 'res/title.png');
+		game.load.audio('keysfx', 'res/key_press.wav');
 	},
 	
 	create: function() {
+		sfxKeyPress = game.add.audio('keysfx');
 		usernameBuffer = "";
 		
 		game.input.keyboard.removeKey(Phaser.KeyCode.O);
 		game.input.keyboard.removeKey(Phaser.KeyCode.P);
+		
 		imageTitle = game.add.sprite( 0, 0, 'title');
 		imageTitle.x = (SCREEN_WIDTH / 2) - (imageTitle.width / 2);
 		imageTitle.y = (SCREEN_HEIGHT / 2) - (imageTitle.height / 2) - 50;
@@ -207,7 +219,7 @@ var stateScore = {
 		
 		game.add.text((SCREEN_WIDTH / 2) - 140, (SCREEN_HEIGHT / 2), "Enter username:", style);
 		game.add.text((SCREEN_WIDTH / 2) - 60, (SCREEN_HEIGHT / 2)  - 15, "Score:", style);
-		game.add.text((SCREEN_WIDTH / 2) - 130, (SCREEN_HEIGHT / 2) + 50, "Press enter key to save score", style);
+		textEnterToSave = game.add.text((SCREEN_WIDTH / 2) - 130, (SCREEN_HEIGHT / 2) + 50, "Press enter key to save score", style);
 		
 		textUsername = game.add.text((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2), usernameBuffer, style);
 		textNewScore = game.add.text((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2) - 15, score, style);
@@ -220,7 +232,6 @@ var stateScore = {
 	
 	keyPress: function(key) {
 		usernameBuffer = usernameBuffer.concat(key);
-		console.log(usernameBuffer);
 		textCursor.x += 9;
 		this.updateUserName();
 	},
@@ -246,11 +257,13 @@ var stateScore = {
 				data: {username: usernameBuffer, score:score},
 				url: 'php/newscore.php',
 				dataType: 'json',
-				success: function(response) {
-					console.log("scored saved:" + response);
+				complete: function() {
+					sfxKeyPress.play();
+					game.state.start(STATE_SCOREBOARD);
 				}
 			});
-			game.state.start(STATE_SCOREBOARD);
+			textEnterToSave.setText("Saving...");
+			game.input.keyboard.removeKey(Phaser.KeyCode.ENTER);
 		}else {
 			alert("Too short");
 		}
@@ -272,8 +285,14 @@ var stateScore = {
 }
 
 var statePlay = { 
+	preload: function() {
+		game.load.audio('sfxFood', 'res/food.wav');
+		game.load.audio('sfxDeath', 'res/death.wav');
+	},
 
 	create: function () {
+		sfxFood = game.add.audio('sfxFood');
+		sfxDeath = game.add.audio('sfxDeath');
 		graphics = game.add.graphics(0, 0);
 		grid = new Array(GAME_WIDTH);	// height
 		
@@ -305,7 +324,10 @@ var statePlay = {
 		buttonSpeedDown.onDown.add(this.speedDown, this);
 		
 		textScore = game.add.text(100, OFFSET_HEIGHT - 15, "Score: 0", style);
-		textSpeed = game.add.text(300, OFFSET_HEIGHT - 15, "Speed: 10", style);
+		textSpeed = game.add.text(300, OFFSET_HEIGHT - 15, "Speed: 9", style);
+		game.add.text(100, 650, "WASD/Arrow Keys - Movement", style);
+		game.add.text(500, 650, "O - Increase Speed", style);
+		game.add.text(500, 665, "P - Decrease Speed", style);
 	},
 	
 	render: function () {
@@ -387,15 +409,15 @@ var statePlay = {
 	},
 
 	speedUp: function () {
-		if( speed < 9 ) {
-			speed++;
+		if( speed > 0) {
+			speed--;
 			this.updateTextSpeed();
 		}
 	},
 
 	speedDown: function () {
-		if( speed > 0) {
-			speed--;
+		if( speed < 9 ) {
+			speed++;
 			this.updateTextSpeed();
 		}
 	},
@@ -447,9 +469,10 @@ var statePlay = {
 			snakeLength += 5;
 			this.spawnFood();
 			this.updateTextScore();
+			sfxFood.play();
 		}else if(grid[playerX][playerY] > 0) {
+			sfxDeath.play();
 			game.state.start(STATE_SCORE);
-			
 			/*
 			score -= ((10 - speed) / 2);
 			this.updateTextScore();
