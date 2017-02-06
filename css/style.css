@@ -1,0 +1,13 @@
+
+body {
+	background-color: #000000;
+	margin: 0px;
+	padding: 0px;
+	width: inherit;
+}
+
+.center {
+    margin: auto;
+	width: 1000px;
+    padding: 0px;
+}
