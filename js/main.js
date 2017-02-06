@@ -159,11 +159,11 @@ var stateScoreboard = {
 			dataType: 'json',
 			success: function(data) {
 				for( var i = 0; i < data.length; i++ ) {
-					game.add.text(320, 200 + (i * 15), (i + 1) + ".", style);
-					game.add.text(350, 200 + (i * 15), data[i].username, style);
-					game.add.text(500, 200 + (i * 15), data[i].score, style);
-					game.add.text(600, 200 + (i * 15), data[i].timestamp, style);
-					game.add.text(350, 200 + (i * 15), "_______________________________________________", style);
+					game.add.text(270, 200 + (i * 15), (i + 1) + ".", style);
+					game.add.text(300, 200 + (i * 15), data[i].username, style);
+					game.add.text(450, 200 + (i * 15), data[i].score, style);
+					game.add.text(550, 200 + (i * 15), data[i].timestamp, style);
+					game.add.text(270, 200 + (i * 15), "__________________________________________________", style);
 				}
 			}
 		});
@@ -212,22 +212,31 @@ var stateScore = {
 		buttonSpace.onDown.add(this.space);
 		buttonBackspace = game.input.keyboard.addKey(Phaser.KeyCode.BACKSPACE);
 		buttonBackspace.onDown.add(this.backspace);
+		
 		buttonEnter = game.input.keyboard.addKey(Phaser.KeyCode.ENTER);
 		buttonEnter.onDown.add(this.saveScore);
 		
-		game.input.keyboard.addCallbacks(this, null, null, this.keyPress);
 		
-		game.add.text((SCREEN_WIDTH / 2) - 140, (SCREEN_HEIGHT / 2), "Enter username:", style);
-		game.add.text((SCREEN_WIDTH / 2) - 60, (SCREEN_HEIGHT / 2)  - 15, "Score:", style);
-		textEnterToSave = game.add.text((SCREEN_WIDTH / 2) - 130, (SCREEN_HEIGHT / 2) + 50, "Press enter key to save score", style);
-		
-		textUsername = game.add.text((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2), usernameBuffer, style);
-		textNewScore = game.add.text((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2) - 15, score, style);
-		
-		textCursor = game.add.text((SCREEN_WIDTH / 2), SCREEN_HEIGHT / 2, "_", style);
-		textCursor.timer = game.time.create(false);
-		textCursor.timer.loop(250, this.blink, this);
-		textCursor.timer.start();
+		if( score > 0 ) {		
+			game.input.keyboard.addCallbacks(this, null, null, this.keyPress);
+			
+			game.add.text((SCREEN_WIDTH / 2) - 140, (SCREEN_HEIGHT / 2), "Enter username:", style);
+			game.add.text((SCREEN_WIDTH / 2) - 60, (SCREEN_HEIGHT / 2)  - 15, "Score:", style);
+			textEnterToSave = game.add.text((SCREEN_WIDTH / 2) - 130, (SCREEN_HEIGHT / 2) + 50, "Press enter key to save score", style);
+			
+			textUsername = game.add.text((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2), usernameBuffer, style);
+			textNewScore = game.add.text((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2) - 15, score, style);
+			
+			textCursor = game.add.text((SCREEN_WIDTH / 2), SCREEN_HEIGHT / 2, "_", style);
+			textCursor.timer = game.time.create(false);
+			textCursor.timer.loop(250, this.blink, this);
+			textCursor.timer.start();
+		}else {
+			var text =  "You did not score anything";
+			game.add.text((SCREEN_WIDTH / 2) - (4.5 * text.length), (SCREEN_HEIGHT / 2)  - 15, text, style);
+			var text =  "Press enter key to continue";
+			textEnterToSave = game.add.text((SCREEN_WIDTH / 2) - (4.5 * text.length), (SCREEN_HEIGHT / 2) + 50, text, style);
+		}
 	},
 	
 	keyPress: function(key) {
@@ -251,21 +260,26 @@ var stateScore = {
 	},
 	
 	saveScore: function() {
-		if( usernameBuffer.length >= 3) {
-			$.ajax({
-				type: 'post',
-				data: {username: usernameBuffer, score:score},
-				url: 'php/newscore.php',
-				dataType: 'json',
-				complete: function() {
-					sfxKeyPress.play();
-					game.state.start(STATE_SCOREBOARD);
-				}
-			});
-			textEnterToSave.setText("Saving...");
-			game.input.keyboard.removeKey(Phaser.KeyCode.ENTER);
+		if( score > 0 ) {
+			if( usernameBuffer.length >= 3) {
+				$.ajax({
+					type: 'post',
+					data: {username: usernameBuffer, score:score},
+					url: 'php/newscore.php',
+					dataType: 'json',
+					complete: function() {
+						sfxKeyPress.play();
+						game.state.start(STATE_SCOREBOARD);
+					}
+				});
+				textEnterToSave.setText("Saving...");
+				game.input.keyboard.removeKey(Phaser.KeyCode.ENTER);
+			}else {
+				alert("Too short");
+			}
 		}else {
-			alert("Too short");
+			sfxKeyPress.play();
+			game.state.start(STATE_SCOREBOARD);
 		}
 	},
 	
@@ -308,11 +322,12 @@ var statePlay = {
 		
 		this.spawnFood();
 		
-		playerX = 15;
-		playerY = 17;
+		playerX = Math.round(GAME_WIDTH / 2);
+		playerY = Math.round(GAME_HEIGHT / 2);
 		updateDelay = speed;
 		score = 0;
 		snakeLength = 10;
+		playerDirection = DIRECTION_UP;
 		
 		input = game.input;
 		game.input.mouse.capture = true;
