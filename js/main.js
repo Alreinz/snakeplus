@@ -438,25 +438,19 @@ var statePlay = {
 			if(playerY == -1) {
 				playerY = GAME_HEIGHT - 1;
 			}
-		}
-		
-		if(playerDirection == DIRECTION_DOWN) {
+		}else if(playerDirection == DIRECTION_DOWN) {
 			playerY++;
 			
 			if(playerY == GAME_HEIGHT) {
 				playerY = 0;
 			}
-		}
-		
-		if(playerDirection == DIRECTION_LEFT) {
+		}else if(playerDirection == DIRECTION_LEFT) {
 			playerX--;
 			
 			if(playerX == -1) {
 				playerX = GAME_WIDTH - 1;
 			}
-		}
-		
-		if(playerDirection == DIRECTION_RIGHT) {
+		}else if(playerDirection == DIRECTION_RIGHT) {
 			playerX++;
 			
 			if(playerX == GAME_WIDTH) {
@@ -484,14 +478,11 @@ var statePlay = {
 		var key = input.keyboard;
 		if ( (key.isDown(Phaser.KeyCode.LEFT) || key.isDown(Phaser.KeyCode.A)) && playerDirection != DIRECTION_RIGHT) {
 			playerDirection = DIRECTION_LEFT;
-		}
-		if ( (key.isDown(Phaser.KeyCode.RIGHT) || key.isDown(Phaser.KeyCode.D)) && playerDirection != DIRECTION_LEFT) {
+		}else if ( (key.isDown(Phaser.KeyCode.RIGHT) || key.isDown(Phaser.KeyCode.D)) && playerDirection != DIRECTION_LEFT) {
 			playerDirection = DIRECTION_RIGHT;
-		}
-		if ( (key.isDown(Phaser.KeyCode.UP) || key.isDown(Phaser.KeyCode.W)) && playerDirection != DIRECTION_DOWN ) {
+		}else if ( (key.isDown(Phaser.KeyCode.UP) || key.isDown(Phaser.KeyCode.W)) && playerDirection != DIRECTION_DOWN ) {
 			playerDirection = DIRECTION_UP;
-		}
-		if ( (key.isDown(Phaser.KeyCode.DOWN) || key.isDown(Phaser.KeyCode.S)) && playerDirection != DIRECTION_UP) {
+		}else if ( (key.isDown(Phaser.KeyCode.DOWN) || key.isDown(Phaser.KeyCode.S)) && playerDirection != DIRECTION_UP) {
 			playerDirection = DIRECTION_DOWN;
 		}
 	}

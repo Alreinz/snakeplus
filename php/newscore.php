@@ -3,8 +3,8 @@
 	$entryScore = $_POST['score'];
 	
 	$servername = "localhost";
-	$username = "root";
-	$password = "";
+	$username = "aldizonc_lorenz";
+	$password = "lorenzdiz1";
 	$dbname = "aldizonc_games";
 
 	// Create connection
