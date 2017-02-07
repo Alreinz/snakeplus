@@ -14,10 +14,12 @@ window.onload = function() {
 var game;
 var graphics;
 var CELL_SIZE = 8;
-var SCREEN_WIDTH = 1000;
-var SCREEN_HEIGHT = 700;
-var GAME_WIDTH = 100;
-var GAME_HEIGHT = 75;
+var SCREEN_WIDTH = 700;
+var SCREEN_HEIGHT = 600;
+var GRID_WIDTH = 75;
+var GRID_HEIGHT = 50;
+var GAME_WIDTH = GRID_WIDTH * CELL_SIZE;
+var GAME_HEIGHT = GRID_HEIGHT * CELL_SIZE;
 var OFFSET_WIDTH = 50;
 var OFFSET_HEIGHT = 50;
 
@@ -308,22 +310,22 @@ var statePlay = {
 		sfxFood = game.add.audio('sfxFood');
 		sfxDeath = game.add.audio('sfxDeath');
 		graphics = game.add.graphics(0, 0);
-		grid = new Array(GAME_WIDTH);	// height
+		grid = new Array(GRID_WIDTH);	// height
 		
-		for( var i = 0; i < GAME_WIDTH; i++) {
-			grid[i] = new Array(GAME_HEIGHT);	// width
+		for( var i = 0; i < GRID_WIDTH; i++) {
+			grid[i] = new Array(GRID_HEIGHT);	// width
 		}
 		
-		for( var i = 0; i < GAME_WIDTH; i++ ) {
-			for( var j = 0; j < GAME_HEIGHT; j++ ) {
+		for( var i = 0; i < GRID_WIDTH; i++ ) {
+			for( var j = 0; j < GRID_HEIGHT; j++ ) {
 				grid[i][j] = 0;
 			}
 		}
 		
 		this.spawnFood();
 		
-		playerX = Math.round(GAME_WIDTH / 2);
-		playerY = Math.round(GAME_HEIGHT / 2);
+		playerX = Math.round(GRID_WIDTH / 2);
+		playerY = Math.round(GRID_HEIGHT / 2);
 		updateDelay = speed;
 		score = 0;
 		snakeLength = 10;
@@ -338,22 +340,22 @@ var statePlay = {
 		buttonSpeedDown = game.input.keyboard.addKey(Phaser.Keyboard.P);
 		buttonSpeedDown.onDown.add(this.speedDown, this);
 		
-		textScore = game.add.text(100, OFFSET_HEIGHT - 15, "Score: 0", style);
-		textSpeed = game.add.text(300, OFFSET_HEIGHT - 15, "Speed: 9", style);
-		game.add.text(100, 650, "WASD/Arrow Keys - Movement", style);
-		game.add.text(500, 650, "O - Increase Speed", style);
-		game.add.text(500, 665, "P - Decrease Speed", style);
+		textScore = game.add.text(50, OFFSET_HEIGHT - 15, "Score: 0", style);
+		textSpeed = game.add.text(400, OFFSET_HEIGHT - 15, "Speed: 9", style);
+		game.add.text(50, GAME_HEIGHT + 50, "WASD/Arrow Keys - Movement", style);
+		game.add.text(400, GAME_HEIGHT + 50, "O - Increase Speed", style);
+		game.add.text(400, GAME_HEIGHT + 65, "P - Decrease Speed", style);
 	},
 	
 	render: function () {
 		graphics.clear();
 		
 		graphics.lineStyle(2,  "0xFFFFFF", 100);
-		graphics.drawRect( OFFSET_WIDTH,  OFFSET_HEIGHT, 800, 600);
+		graphics.drawRect( OFFSET_WIDTH,  OFFSET_HEIGHT, GAME_WIDTH, GAME_HEIGHT);
 		graphics.lineStyle(0,  "0xFFFFFF", 100);
 		
-		for( var i = 0; i < GAME_WIDTH; i++ ) {
-			for( var j = 0; j < GAME_HEIGHT; j++ ) { 
+		for( var i = 0; i < GRID_WIDTH; i++ ) {
+			for( var j = 0; j < GRID_HEIGHT; j++ ) { 
 				var cellData = grid[i][j];
 				
 				if( cellData == "F") {
@@ -418,8 +420,8 @@ var statePlay = {
 	},
 
 	spawnFood: function () {
-		var newX = game.math.roundTo(game.math.between(5, GAME_WIDTH - 5), 0);
-		var newY = game.math.roundTo(game.math.between(5, GAME_HEIGHT - 5), 0);
+		var newX = game.math.roundTo(game.math.between(5, GRID_WIDTH - 5), 0);
+		var newY = game.math.roundTo(game.math.between(5, GRID_HEIGHT - 5), 0);
 		grid[newX][newY]  = ENTITY_FOOD;
 	},
 
@@ -438,8 +440,8 @@ var statePlay = {
 	},
 	
 	playerUpdate: function () {
-		for( var i = 0; i < GAME_WIDTH; i++ ) {
-			for( var j = 0; j < GAME_HEIGHT; j++ ) {
+		for( var i = 0; i < GRID_WIDTH; i++ ) {
+			for( var j = 0; j < GRID_HEIGHT; j++ ) {
 				if( grid[i][j] > 0 ) {
 					grid[i][j]--;
 				}
@@ -451,24 +453,24 @@ var statePlay = {
 			playerY--;
 			
 			if(playerY == -1) {
-				playerY = GAME_HEIGHT - 1;
+				playerY = GRID_HEIGHT - 1;
 			}
 		}else if(playerDirection == DIRECTION_DOWN) {
 			playerY++;
 			
-			if(playerY == GAME_HEIGHT) {
+			if(playerY == GRID_HEIGHT) {
 				playerY = 0;
 			}
 		}else if(playerDirection == DIRECTION_LEFT) {
 			playerX--;
 			
 			if(playerX == -1) {
-				playerX = GAME_WIDTH - 1;
+				playerX = GRID_WIDTH - 1;
 			}
 		}else if(playerDirection == DIRECTION_RIGHT) {
 			playerX++;
 			
-			if(playerX == GAME_WIDTH) {
+			if(playerX == GRID_WIDTH) {
 				playerX = 0;
 			}
 		}
