@@ -13,22 +13,23 @@ window.onload = function() {
 // Game properties
 var game;
 var graphics;
-var CELL_SIZE = 8;
-var SCREEN_WIDTH = 700;
-var SCREEN_HEIGHT = 600;
-var GRID_WIDTH = 75;
-var GRID_HEIGHT = 50;
-var GAME_WIDTH = GRID_WIDTH * CELL_SIZE;
-var GAME_HEIGHT = GRID_HEIGHT * CELL_SIZE;
-var OFFSET_WIDTH = 50;
-var OFFSET_HEIGHT = 50;
-
-// Game States
 var gameState;
-var STATE_MENU = "menu";
-var STATE_PLAY = "play";
-var STATE_SCORE = "score";
-var STATE_SCOREBOARD = "scoreboard";
+
+// game constants
+const CELL_SIZE = 8;
+const SCREEN_WIDTH = 700;
+const SCREEN_HEIGHT = 600;
+const GRID_WIDTH = 75;
+const GRID_HEIGHT = 50;
+const GAME_WIDTH = GRID_WIDTH * CELL_SIZE;
+const GAME_HEIGHT = GRID_HEIGHT * CELL_SIZE;
+const OFFSET_WIDTH = 50;
+const OFFSET_HEIGHT = 50;
+
+const STATE_MENU = "menu";
+const STATE_PLAY = "play";
+const STATE_SCORE = "score";
+const STATE_SCOREBOARD = "scoreboard";
 
 // Game entities
 var ENTITY_FOOD = "F";
@@ -161,11 +162,11 @@ var stateScoreboard = {
 			dataType: 'json',
 			success: function(data) {
 				for( var i = 0; i < data.length; i++ ) {
-					game.add.text(270, 200 + (i * 15), (i + 1) + ".", style);
-					game.add.text(300, 200 + (i * 15), data[i].username, style);
-					game.add.text(450, 200 + (i * 15), data[i].score, style);
-					game.add.text(550, 200 + (i * 15), data[i].timestamp, style);
-					game.add.text(270, 200 + (i * 15), "__________________________________________________", style);
+					game.add.text(120, 200 + (i * 15), (i + 1) + ".", style);
+					game.add.text(150, 200 + (i * 15), data[i].username, style);
+					game.add.text(300, 200 + (i * 15), data[i].score, style);
+					game.add.text(400, 200 + (i * 15), data[i].timestamp, style);
+					game.add.text(120, 200 + (i * 15), "__________________________________________________", style);
 				}
 			}
 		});
